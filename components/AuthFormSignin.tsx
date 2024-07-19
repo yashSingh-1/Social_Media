@@ -9,9 +9,11 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "./CustomInput";
 import Link from "next/link";
 import { login } from "@/actions/login";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import AuthError from "./AuthError";
 
 const AuthForm = () => {
+  const [error, setError] = useState<string | undefined>("")
 
   const [isPending, startTransition] = useTransition();
 
@@ -31,7 +33,9 @@ const AuthForm = () => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     startTransition(() => {
-      login(values);
+      login(values).then((data) => {
+        setError(data?.error)
+      });;
     })
   }
 
@@ -61,6 +65,11 @@ const AuthForm = () => {
               name="password"
               placeholder="********"
             />
+
+            { 
+              error ? 
+            <AuthError message={error}/>: null
+            }
             
             <Button type="submit" className="w-full bg-slate-600" disabled={isPending}>
               Submit

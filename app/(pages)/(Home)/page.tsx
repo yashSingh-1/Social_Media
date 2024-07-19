@@ -1,4 +1,6 @@
+import { signOut } from "@/auth";
 import PostCard from "@/components/PostCard";
+import { Button } from "@/components/ui/button";
 
 
 export default function Home() {
@@ -13,7 +15,15 @@ export default function Home() {
       <PostCard />
       <PostCard />
       <PostCard />
+      <form action={async() => {
+        "use server";
 
+        await signOut();
+      }}>
+        <Button className="p-2 bg-slate-600" type="submit">
+        Ride that dick back, nigger
+      </Button>
+      </form>
     </div>
     </div>
   );

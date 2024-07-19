@@ -9,8 +9,11 @@ import { Form } from "@/components/ui/form";
 import CustomInput from "./CustomInput";
 import Link from "next/link";
 import { register } from "@/actions/register";
+import AuthError from "@/components/AuthError"
+import { useState } from "react";
 
 const AuthForm = () => {
+  const [error, setError] = useState<string | undefined>("")
   // 1. Define your form.
   const form = useForm<z.infer<typeof RegisterSchema >>({
     resolver: zodResolver(RegisterSchema),
@@ -28,7 +31,9 @@ const AuthForm = () => {
   ) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    register(values);
+    register(values).then((data) => {
+      setError(data.error)
+    });
   }
 
   return (
@@ -70,10 +75,16 @@ const AuthForm = () => {
               name="password"
               placeholder="********"
             />
+
+            { 
+              error ? 
+            <AuthError message={error}/>: null
+            }
             
             <Button type="submit" className="w-full bg-slate-600">
               Submit
             </Button>
+
           </form>
         </Form>
         <div className="text-slate-400 text-sm flex justify-end mt-1">
@@ -86,6 +97,7 @@ const AuthForm = () => {
             </div>
           
         </div>
+
       </div>
     </div>
   );
